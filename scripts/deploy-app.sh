@@ -135,7 +135,7 @@ fi
 if [[ ${BUILD} == true ]]; then
   echo "Building MB image: ${IMAGE_NAME}"
   echo "${BASEDIR}"/../deploy/docker/Dockerfile.prod
-  docker build -f "${BASEDIR}"/../deploy/docker/Dockerfile -t "${IMAGE_NAME}" ../ \
+  docker build -f "${BASEDIR}"/../deploy/docker/Dockerfile -t "${IMAGE_NAME}" "${BASEDIR}"/../ \
   --build-arg BUILD_IMAGE="${BASE_IMAGE}" --no-cache
 fi
 
