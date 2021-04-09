@@ -1,0 +1,331 @@
+definitions:
+  model.ComposedMessage:
+    properties:
+      body:
+        type: string
+      id:
+        type: integer
+      recipient:
+        $ref: '#/definitions/model.MessageRecipient'
+      sender:
+        type: string
+      subject:
+        type: string
+    type: object
+  model.GroupCreation:
+    properties:
+      groupname:
+        type: string
+      usernames:
+        items:
+          type: string
+        type: array
+    type: object
+  model.Message:
+    properties:
+      body:
+        type: string
+      id:
+        type: integer
+      re:
+        type: integer
+      recipient:
+        $ref: '#/definitions/model.MessageRecipient'
+      sender:
+        type: string
+      sentAt:
+        type: string
+      subject:
+        type: string
+    type: object
+  model.MessageRecipient:
+    properties:
+      groupname:
+        type: string
+      username:
+        type: string
+    type: object
+  model.ReplyMessage:
+    properties:
+      body:
+        type: string
+      sender:
+        type: string
+      subject:
+        type: string
+    type: object
+  model.UserRegistration:
+    properties:
+      username:
+        type: string
+    type: object
+  resource.HTTPError:
+    type: object
+info:
+  contact:
+    email: Joshua.Brummet@gmail.com
+    name: Joshua Brummet
+    url: http://github.com/brummetj
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /groups:
+    post:
+      consumes:
+      - application/json
+      description: Create a new group defined with a groupname and usernames to be
+        added
+      parameters:
+      - description: group registration
+        in: body
+        name: GroupCreation
+        required: true
+        schema:
+          $ref: '#/definitions/model.GroupCreation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GroupCreation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Create a new group
+  /messages:
+    post:
+      consumes:
+      - application/json
+      description: Send a message to a user or group
+      parameters:
+      - description: A composed message
+        in: body
+        name: ComposedMessage
+        required: true
+        schema:
+          $ref: '#/definitions/model.ComposedMessage'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ComposedMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Send a message to a user
+  /messages/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a message by ID
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Get a message
+  /messages/{id}/replies:
+    get:
+      consumes:
+      - application/json
+      description: Get a reply from a message by message ID
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Message'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Get all the replies from a message
+    post:
+      consumes:
+      - application/json
+      description: A user can reply to a message based on the message Id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Reply Message
+        in: body
+        name: ReplyMessage
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReplyMessage'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Reply to a message!
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create user by username
+      parameters:
+      - description: User registration
+        in: body
+        name: UserRegistration
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserRegistration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UserRegistration'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Creates a new user
+  /users/{username}/mailbox:
+    get:
+      consumes:
+      - application/json
+      description: Grab all messages in a user mailbox
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Message'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "404":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/api.HTTPError'
+      summary: Get the mailbox for a username
+swagger: "2.0"

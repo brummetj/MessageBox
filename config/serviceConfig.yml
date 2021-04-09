@@ -1,0 +1,22 @@
+protocol: http
+basepath:
+port: 3001
+host: localhost
+version: 1.0
+logConfig:
+  outputPaths:
+    - stdout
+    - /tmp/MessageBox.log
+  logger: zap
+  encoding: console
+  level: debug
+  errorPaths:
+    - stderr
+    - /tmp/MessageBoxErrors.log
+couchbaseConfig:
+  host: localhost
+  username: admin
+  password: password
+  bucket: messageBox
+  documentKey: message-box-doc
+  retries: 10 # Number of retries for attempts to connect to the DB

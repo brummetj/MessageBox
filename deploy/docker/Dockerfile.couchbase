@@ -1,0 +1,5 @@
+FROM couchbase:6.0.5
+
+ADD configure-db.sh /opt/couchbase
+
+CMD ["/opt/couchbase/configure-db.sh"]
